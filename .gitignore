@@ -1,0 +1,6 @@
+.DS_Store
+__pycache__
+bundle.zip
+*.tar.gz
+pics/*
+!pics/.gitkeep
