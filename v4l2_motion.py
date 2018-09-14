@@ -54,10 +54,11 @@ WEBCAM_VFLIP = False
 MIN_AREA = 200 * 3      # excludes all contours less than or equal to this Area
 THRESHOLD_SENSITIVITY = 25
 BLUR_SIZE = 10
-IMAGE_W = 320 * 3
-IMAGE_H = 240 * 3
+# 3280x2464
+IMAGE_W = 1024 # 320 * 3
+IMAGE_H = 768  # 240 * 3
 
-LINE_THICKNESS = 2
+LINE_THICKNESS = 1
 # Color data for OpenCV lines and text
 CV_WHITE = (255, 255, 255)
 CV_BLACK = (0, 0, 0)
@@ -132,7 +133,7 @@ def track(callback=my_stuff):
     
     still_scanning = True
     while still_scanning:
-        time.sleep(.5)
+        time.sleep(.3)
         # initialize variables
         motion_found = False
         biggest_area = MIN_AREA

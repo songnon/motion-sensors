@@ -33,6 +33,7 @@ class MotionSensor(Accessory):
     def _detected(self, is_detected, img):
         logger.debug("is_detected: " + str(is_detected))
         if is_detected:
+            img = self.increase_brightness(img)
             # timestr = time.strftime("%Y%m%d-%H%M%S")
             # cv2.imwrite('./pics/' + timestr + '.jpg',img)
             if not self.char_motion_detected.value:
@@ -40,9 +41,10 @@ class MotionSensor(Accessory):
                 cv2.imwrite('./pics/' + timestr + '.jpg',img)
                 logger.info("turn on motion sensor")
                 self.char_motion_detected.set_value(True)
-            if not self.char_human_detected.value:
+            # if not self.char_human_detected.value:
+            if True:
                 _, img_encoded = cv2.imencode('.jpg', img)
-                if self.detect_human(img_encoded):
+                if self.detect_human(img_encoded) and not self.char_human_detected.value:
                     logger.info("turn on human sensor")
                     self.char_human_detected.set_value(True)
         self.detecton_series.append(is_detected)
@@ -54,6 +56,18 @@ class MotionSensor(Accessory):
                 self.char_motion_detected.set_value(False)
             if self.char_human_detected.value:
                 self.char_human_detected.set_value(False)
+
+    def increase_brightness(self, img, value=30):
+        hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
+        h, s, v = cv2.split(hsv)
+
+        lim = 255 - value
+        v[v > lim] = 255
+        v[v <= lim] += value
+
+        final_hsv = cv2.merge((h, s, v))
+        img = cv2.cvtColor(final_hsv, cv2.COLOR_HSV2BGR)
+        return img
 
     def detect_human(self, img):
         # take a high resolution picture from another device and check
